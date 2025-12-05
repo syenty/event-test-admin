@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { DashboardView } from "@/components/DashboardView";
+import { EventsView } from "@/components/EventsView";
 import { LoginForm } from "@/components/LoginForm";
 import { QuizView } from "@/components/QuizView";
 import { Sidebar } from "@/components/Sidebar";
 
 export default function Home() {
-  const [selectedMenu, setSelectedMenu] = useState<"dashboard" | "quiz">(
+  const [selectedMenu, setSelectedMenu] = useState<
+    "dashboard" | "quiz" | "events"
+  >(
     "dashboard",
   );
   const [token, setToken] = useState<string | null>(null);
@@ -69,6 +72,9 @@ export default function Home() {
               {selectedMenu === "dashboard" ? <DashboardView /> : null}
               {selectedMenu === "quiz" && token ? (
                 <QuizView token={token} apiUrl={apiUrl} />
+              ) : null}
+              {selectedMenu === "events" && token ? (
+                <EventsView token={token} apiUrl={apiUrl} />
               ) : null}
             </main>
           </div>

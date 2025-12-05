@@ -38,6 +38,27 @@ export type QuizListResponse = {
   last: boolean;
 };
 
+export type EventItem = {
+  id: number | string;
+  name?: string;
+  description?: string;
+  startDt?: string;
+  endDt?: string;
+  participationStartTime?: string;
+  participationEndTime?: string;
+  attendanceStartTime?: string;
+  attendanceEndTime?: string;
+  intersectionParticipationStartTime?: string;
+  intersectionParticipationEndTime?: string;
+  intersectionAttendanceStartTime?: string;
+  intersectionAttendanceEndTime?: string;
+  maxDailyTry?: number;
+  rewardLimitPerUser?: number;
+  status?: string;
+  createdDt?: string;
+  updatedDt?: string;
+};
+
 const resolveBaseUrl = (baseUrl?: string | null) => {
   if (!baseUrl) return null;
   return baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
@@ -112,4 +133,32 @@ export async function fetchQuizzes(
     throw new Error("퀴즈 목록 응답 형식이 올바르지 않습니다.");
   }
   return data as QuizListResponse;
+}
+
+export async function fetchEvents(
+  token: string,
+  options: BaseOptions = {},
+): Promise<EventItem[]> {
+  const normalized = resolveBaseUrl(options.baseUrl ?? process.env.NEXT_PUBLIC_API_URL);
+  if (!normalized) {
+    throw new Error("API URL이 설정되지 않았습니다. .env.local을 확인하세요.");
+  }
+
+  const endpoint = `${normalized}/api/events`;
+  const response = await fetch(endpoint, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || `이벤트 목록 요청 실패 (status ${response.status})`);
+  }
+
+  const data = (await response.json()) as unknown;
+  if (!Array.isArray(data)) {
+    throw new Error("이벤트 목록 응답 형식이 올바르지 않습니다.");
+  }
+  return data as EventItem[];
 }
