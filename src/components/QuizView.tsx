@@ -87,9 +87,39 @@ export function QuizView({ token, apiUrl }: QuizViewProps) {
           {quizzes.map((quiz) => (
             <article
               key={quiz.id}
-              className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm"
+              className="rounded-lg border border-neutral-200 bg-white shadow-sm"
             >
-              <header className="flex items-start justify-between gap-4">
+              <header
+                role="button"
+                tabIndex={0}
+                aria-expanded={expandedIds.has(quiz.id)}
+                onClick={() => {
+                  setExpandedIds((prev) => {
+                    const next = new Set(prev);
+                    if (next.has(quiz.id)) {
+                      next.delete(quiz.id);
+                    } else {
+                      next.add(quiz.id);
+                    }
+                    return next;
+                  });
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setExpandedIds((prev) => {
+                      const next = new Set(prev);
+                      if (next.has(quiz.id)) {
+                        next.delete(quiz.id);
+                      } else {
+                        next.add(quiz.id);
+                      }
+                      return next;
+                    });
+                  }
+                }}
+                className="flex cursor-pointer items-start justify-between gap-4 rounded-lg px-4 py-3 transition hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-neutral-200"
+              >
                 <div className="space-y-1">
                   <p className="text-xs font-semibold uppercase text-neutral-500">
                     {quiz.type ?? "퀴즈"}
@@ -116,24 +146,9 @@ export function QuizView({ token, apiUrl }: QuizViewProps) {
                     {quiz.active ? "활성" : "비활성"}
                   </span>
                   {quiz.options && quiz.options.length > 0 ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setExpandedIds((prev) => {
-                          const next = new Set(prev);
-                          if (next.has(quiz.id)) {
-                            next.delete(quiz.id);
-                          } else {
-                            next.add(quiz.id);
-                          }
-                          return next;
-                        });
-                      }}
-                      className="text-xs font-semibold text-neutral-700 underline underline-offset-2"
-                      aria-expanded={expandedIds.has(quiz.id)}
-                    >
+                    <span className="text-xs font-semibold text-neutral-700">
                       {expandedIds.has(quiz.id) ? "옵션 닫기" : "옵션 보기"}
-                    </button>
+                    </span>
                   ) : null}
                 </div>
               </header>
