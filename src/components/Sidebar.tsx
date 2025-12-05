@@ -1,13 +1,14 @@
 "use client";
 
 type SidebarProps = {
-  selected: "dashboard" | "quiz";
-  onSelect: (value: "dashboard" | "quiz") => void;
+  selected: "dashboard" | "quiz" | "events";
+  onSelect: (value: "dashboard" | "quiz" | "events") => void;
 };
 
-const items: { key: "dashboard" | "quiz"; label: string }[] = [
+const items: { key: "dashboard" | "quiz" | "events"; label: string }[] = [
   { key: "dashboard", label: "대시보드" },
   { key: "quiz", label: "퀴즈" },
+  { key: "events", label: "이벤트" },
 ];
 
 export function Sidebar({ selected, onSelect }: SidebarProps) {
