@@ -124,9 +124,20 @@ export function QuizView({ token, apiUrl }: QuizViewProps) {
                   <p className="text-xs font-semibold uppercase text-neutral-500">
                     {quiz.type ?? "퀴즈"}
                   </p>
-                  <p className="text-base font-semibold text-neutral-900">
-                    {quiz.questionText ?? `퀴즈 ${quiz.id}`}
-                  </p>
+                  {quiz.questionText && quiz.questionText.startsWith("http") ? (
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={quiz.questionText}
+                        alt={`퀴즈 ${quiz.id}`}
+                        className="h-20 w-20 rounded-md border border-neutral-200 object-cover"
+                      />
+                    </>
+                  ) : (
+                    <p className="text-base font-semibold text-neutral-900">
+                      {quiz.questionText ?? `퀴즈 ${quiz.id}`}
+                    </p>
+                  )}
                   <p className="text-sm text-neutral-600">
                     {quiz.quizDate ? `날짜: ${quiz.quizDate}` : null}
                   </p>
