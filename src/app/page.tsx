@@ -33,6 +33,12 @@ export default function Home() {
     setSelectedMenu("dashboard");
   };
 
+  const handleLogout = () => {
+    window.localStorage.removeItem("accessToken");
+    setToken(null);
+    setSelectedMenu("dashboard");
+  };
+
   return (
     <div className="min-h-screen bg-neutral-100 px-6 py-12">
       <div className="mx-auto max-w-5xl">
@@ -47,9 +53,18 @@ export default function Home() {
             </p>
           </div>
           {token ? (
-            <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-              로그인됨
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                로그인됨
+              </span>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="rounded-lg border border-neutral-200 bg-white px-3 py-1 text-xs font-semibold text-neutral-800 shadow-sm transition hover:bg-neutral-50"
+              >
+                로그아웃
+              </button>
+            </div>
           ) : (
             <span className="rounded-full bg-neutral-200 px-3 py-1 text-xs font-semibold text-neutral-700">
               로그인 필요
