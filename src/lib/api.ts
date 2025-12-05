@@ -59,6 +59,25 @@ export type EventItem = {
   updatedDt?: string;
 };
 
+export type RewardPolicy = {
+  id: number | string;
+  eventId?: number;
+  name?: string;
+  policyType?: string;
+  startDt?: string;
+  endDt?: string;
+  winnerLimitTotal?: number | null;
+  winnerLimitPerDay?: number | null;
+  targetOrder?: number | null;
+  nthScope?: string;
+  userLimitTotal?: number | null;
+  userLimitPerDay?: number | null;
+  rewardType?: string;
+  rewardValue?: string;
+  createdDt?: string;
+  updatedDt?: string;
+};
+
 const resolveBaseUrl = (baseUrl?: string | null) => {
   if (!baseUrl) return null;
   return baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
@@ -161,4 +180,34 @@ export async function fetchEvents(
     throw new Error("이벤트 목록 응답 형식이 올바르지 않습니다.");
   }
   return data as EventItem[];
+}
+
+export async function fetchRewardPolicies(
+  token: string,
+  options: BaseOptions = {},
+): Promise<RewardPolicy[]> {
+  const normalized = resolveBaseUrl(options.baseUrl ?? process.env.NEXT_PUBLIC_API_URL);
+  if (!normalized) {
+    throw new Error("API URL이 설정되지 않았습니다. .env.local을 확인하세요.");
+  }
+
+  const endpoint = `${normalized}/api/reward-policies`;
+  const response = await fetch(endpoint, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(
+      message || `정책 목록 요청 실패 (status ${response.status})`,
+    );
+  }
+
+  const data = (await response.json()) as unknown;
+  if (!Array.isArray(data)) {
+    throw new Error("정책 목록 응답 형식이 올바르지 않습니다.");
+  }
+  return data as RewardPolicy[];
 }
